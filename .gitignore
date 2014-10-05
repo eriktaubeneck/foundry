@@ -1,0 +1,5 @@
+venv
+.coverage
+build
+dist
+foundry.egg-info
