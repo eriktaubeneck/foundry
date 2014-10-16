@@ -6,7 +6,7 @@ from copy import deepcopy
 
 def fake_file_factory(fudged_files):
     @contextmanager
-    def fake_file(filename):
+    def fake_file(filename, method='r'):
         content = fudged_files.get(
             os.path.relpath(
                 filename,

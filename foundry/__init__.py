@@ -48,19 +48,21 @@ class Mold(object):
 
         for fixture_name, fixture_data in data.items():
             fixture_data.update(
-                {attr.lstrip(self.relation_key):
+                {attr.replace(self.relation_key+'_', ''):
                  self.foundry.load_relation(value)
                  for attr, value in fixture_data.items()
                  if attr.startswith(self.relation_key)}
             )
             relation_attrs = [f for f in fixture_data if
-                         f.startswith(self.relation_key)]
+                              f.startswith(self.relation_key)]
             for attr in relation_attrs:
                 del fixture_data[attr]
 
-            obj = self.model(**fixture_data)
             for attr, str_converter in self.str_converters.items():
-                setattr(obj, attr, str_converter(getattr(obj, attr)))
+                if attr in fixture_data:
+                    fixture_data[attr] = str_converter(fixture_data[attr])
+
+            obj = self.model(**fixture_data)
             obj.id = self.custom_id_gen(getattr(obj, 'id', None))
             self.foundry.create(fixture_name, obj)
 
@@ -101,10 +103,16 @@ class Foundry(object):
 
     def __getitem__(self, fixture_name):
         if not self.fixtures:
-            raise KeyError('{}. Foundry is empty.')
-        else:
-            model_name, _id = self.fixtures[fixture_name]
-            return self.query(self.model_lookup[model_name], _id)
+            self.load_cached_fixtures()
+
+        model_name, _id = self.fixtures.get(fixture_name, (None, None))
+        if not (model_name and _id):
+            raise KeyError('Fixture {} was not found.'.format(fixture_name))
+        obj = self.query(self.model_lookup[model_name], _id)
+        if not obj:
+            raise KeyError(
+                'Fixture {} not found in datastore.'.format(fixture_name))
+        return obj
 
     def create(self, fixture_name, obj):
         if fixture_name in self.staged_fixtures.keys():
@@ -134,6 +142,17 @@ class Foundry(object):
         self.fixtures = {fixture_name: (type(obj).__name__, obj.id)
                          for fixture_name, obj in
                          self.staged_fixtures.items()}
+        with open(os.path.join(self.path, '.foundry_ids'), 'w') as f:
+            f.write(unicode(yaml.dump(self.fixtures)))
+
+    def load_cached_fixtures(self):
+        try:
+            with open(os.path.join(self.path, '.foundry_ids')) as f:
+                self.fixtures = yaml.load(f)
+        except IOError:
+            raise IOError(
+                'No stashed .foundry_ids file found. Please (re)poulate.')
+
 
 
 class DictFoundry(Foundry):
@@ -153,7 +172,7 @@ class DictFoundry(Foundry):
 
 class SQLAlchemyFoundry(Foundry):
     def __init__(self, session, *args, **kwargs):
-        super(DictFoundry, self).__init__(*args, **kwargs)
+        super(SQLAlchemyFoundry, self).__init__(*args, **kwargs)
         self.session = session
 
     def queue(self, obj):

@@ -9,7 +9,7 @@ from setuptools import setup
 
 setup(
     name='foundry',
-    version='0.0.1',
+    version='0.0.2',
     packages=['foundry'],
     url='http://github.com/eriktaubeneck/foundry',
     license='MIT',
