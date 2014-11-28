@@ -10,6 +10,13 @@ def is_str_or_unicode(s):
         return isinstance(s, str)
 
 
+def _unicode(s):
+    if sys.version_info[0] < 3:
+        return unicode(s)
+    else:
+        return s
+
+
 class Mold(object):
     def __init__(self, filename, model, base_path=None, relation_key=None,
                  custom_id_gen=None, str_converters=None):
@@ -143,7 +150,7 @@ class Foundry(object):
                          for fixture_name, obj in
                          self.staged_fixtures.items()}
         with open(os.path.join(self.path, '.foundry_ids'), 'w') as f:
-            f.write(unicode(yaml.dump(self.fixtures)))
+            f.write(_unicode(yaml.dump(self.fixtures)))
 
     def load_cached_fixtures(self):
         try:
