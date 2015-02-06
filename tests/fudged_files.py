@@ -17,6 +17,11 @@ def fake_file_factory(fudged_files):
     return fake_file
 
 fudged_data_files = {
+    u'planet.yml': u"""
+earth:
+    id: 1
+    name: Earth
+    """,
     u'crew.yml': u"""
 fry:
     id: 1
@@ -24,6 +29,7 @@ fry:
     birthday: '1974-08-14'
     role: 'delivery boy'
     salary: '10000.00'
+    foundry_relation_planet: 'earth'
 
 leela:
     id: 2

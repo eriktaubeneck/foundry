@@ -106,7 +106,7 @@ class Foundry(object):
         if isinstance(value, list):
             return [self.staged_fixtures[v] for v in value]
         else:
-            return self.staged_fixtures[v]
+            return self.staged_fixtures[value]
 
     def __getitem__(self, fixture_name):
         if not self.fixtures:

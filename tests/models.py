@@ -11,6 +11,7 @@ def models_factory(Base):
         role = Column(String)
         salary = Column(Numeric(12, 2))
         ship_id = Column(String, ForeignKey('ship.id'))
+        planet_id = Column(String, ForeignKey('planet.id'))
 
     class Ship(Base):
         __tablename__ = 'ship'
@@ -22,4 +23,10 @@ def models_factory(Base):
         last_serviced_at = Column(DateTime)
         crew = relationship('Crew', backref='ship', lazy='dynamic')
 
-    return Crew, Ship
+    class Planet(Base):
+        __tablename__ = 'planet'
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+        residents = relationship('Crew', backref='planet', lazy='dynamic')
+
+    return Crew, Ship, Planet

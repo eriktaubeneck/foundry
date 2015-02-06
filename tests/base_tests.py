@@ -21,14 +21,16 @@ else:
 
 class FoundryTestCase(unittest.TestCase):
     def setUp(self):
-        self.Crew, self.Ship = models_factory(declarative_base())
+        self.Crew, self.Ship, self.Planet = models_factory(declarative_base())
         crew_converters = {
             'birthday': lambda s: datetime.strptime(s, '%Y-%m-%d'),
             'salary': lambda s: Decimal(s)
         }
         self.foundry = DictFoundry(
-            [Mold('crew.yml', self.Crew, str_converters=crew_converters),
-             ('ship.yml', self.Ship)]
+            [
+                ('planet.yml', self.Planet),
+                Mold('crew.yml', self.Crew, str_converters=crew_converters),
+                ('ship.yml', self.Ship)]
         )
 
     @fudge.patch(open_function_string)
