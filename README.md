@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/eriktaubeneck/foundry.svg?branch=master)](https://travis-ci.org/eriktaubeneck/foundry)
 [![Coverage Status](https://img.shields.io/coveralls/eriktaubeneck/foundry.svg)](https://coveralls.io/r/eriktaubeneck/foundry)
-[![Latest Version](https://pypip.in/version/foundry/badge.png)](https://pypi.python.org/pypi/foundry/)
-[![Downloads](https://pypip.in/download/foundry/badge.png)](https://pypi.python.org/pypi/foundry/)
-[![License](https://pypip.in/license/foundry/badge.png)](https://pypi.python.org/pypi/foundry/)
+[![Latest Version](https://img.shields.io/pypi/v/foundry.svg)](https://pypi.python.org/pypi/foundry/)
+[![Downloads](https://img.shields.io/pypi/dm/foundry.svg)](https://pypi.python.org/pypi/foundry/)
+[![License](https://img.shields.io/pypi/l/foundry.svg)](https://pypi.python.org/pypi/foundry/)
 
 Often times, when building an application, it is handy to create some seed data with which to use and test how parts of your application will work. When this dataset is small, a python script works just fine, but as that data set (and number of different data models) grow, this approach becomes quite cumbersome.
 
